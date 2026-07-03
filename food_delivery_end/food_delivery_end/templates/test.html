@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест авторизации</title>
+    <script src="https://st.max.ru/js/max-web-app.js"></script>
+</head>
+<body>
+    <h1>🧪 Тест авторизации в MAX</h1>
+    <pre id="output"></pre>
+    <button onclick="test()">Тест</button>
+    
+    <script>
+        function test() {
+            const out = document.getElementById('output');
+            out.textContent = 'Тестируем...\n';
+            
+            // 1. Проверяем MAX
+            if (typeof window.WebApp !== 'undefined') {
+                out.textContent += '✅ WebApp найден\n';
+                if (window.WebApp.initDataUnsafe) {
+                    out.textContent += '✅ initDataUnsafe есть\n';
+                    out.textContent += '📊 Данные: ' + JSON.stringify(window.WebApp.initDataUnsafe, null, 2) + '\n';
+                    if (window.WebApp.initDataUnsafe.user) {
+                        out.textContent += '👤 Пользователь: ' + JSON.stringify(window.WebApp.initDataUnsafe.user, null, 2) + '\n';
+                    }
+                } else {
+                    out.textContent += '❌ initDataUnsafe отсутствует\n';
+                }
+            } else {
+                out.textContent += '❌ WebApp не найден (приложение не в MAX)\n';
+            }
+            
+            // 2. Проверяем авторизацию на сервере
+            fetch('/api/auth/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    user_id: 999, 
+                    username: 'test_max', 
+                    first_name: 'Тест MAX' 
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                out.textContent += '\n🔐 Авторизация на сервере: ' + JSON.stringify(data, null, 2) + '\n';
+            });
+            
+            // 3. Проверяем корзину
+            fetch('/api/cart/')
+            .then(r => r.json())
+            .then(data => {
+                out.textContent += '\n🛒 Корзина: ' + JSON.stringify(data, null, 2) + '\n';
+            });
+        }
+        
+        // Автоматический тест при загрузке
+        document.addEventListener('DOMContentLoaded', test);
+    </script>
+</body>
+</html>

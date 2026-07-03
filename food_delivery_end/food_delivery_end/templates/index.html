@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍕 Доставка продуктов</title>
+    <script src="https://st.max.ru/js/max-web-app.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div id="toast" class="toast"></div>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>🍕 Доставка продуктов</h1>
+            <p>Свежие продукты с доставкой на дом</p>
+            <div class="user-info" id="userDisplay">👤 Загрузка...</div>
+        </div>
+
+        <div class="order-status-bar" id="orderStatusBar">
+            <div class="top-row">
+                <span style="font-weight:600;">📦 Текущий заказ</span>
+                <span style="font-size:13px;color:#868e96;" id="orderId">#0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                <span class="status-badge" id="orderStatusBadge">🆕 Новый</span>
+                <span style="font-size:16px;font-weight:700;color:#ff6b35;" id="orderTotal">0 ₽</span>
+            </div>
+            <div class="details" id="orderDetails">
+                <div class="row"><span>📍</span><span id="orderAddress">-</span></div>
+                <div class="row"><span>📞</span><span id="orderPhone">-</span></div>
+                <div class="row"><span>🕐</span><span id="orderDate">-</span></div>
+            </div>
+            <div class="items-list" id="orderItems"></div>
+        </div>
+
+        <div class="action-panel">
+            <button class="btn-history" onclick="showHistory()">
+                📜 История
+                <span class="badge hidden" id="historyBadge">0</span>
+            </button>
+            <button class="btn-check" onclick="manualCheck()">🔄 Обновить</button>
+        </div>
+
+        <div class="dev-panel" id="devPanel">
+            <strong>🛠 Режим разработки</strong>
+            <div class="dev-users" id="userButtons">
+                <button data-user="1" class="active">👤 Иван</button>
+                <button data-user="2">👩 Мария</button>
+                <button data-user="3">👨 Петр</button>
+            </div>
+        </div>
+
+        <div class="categories" id="categories">
+            <button class="category-btn active" data-slug="">🏠 Все</button>
+        </div>
+
+        <div class="products" id="products">
+            <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+
+    </div>
+
+    <button class="cart-icon" id="cartIcon" onclick="toggleCart()">
+        🛒
+        <span class="badge hidden" id="cartBadge">0</span>
+    </button>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <div class="cart-modal" id="cartModal">
+        <button class="close-btn" onclick="toggleCart()">✕</button>
+        <div class="cart-header">
+            <h3>🛒 Корзина</h3>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty"><span class="icon">🛒</span>Корзина пуста</div>
+        </div>
+        <div class="cart-total">
+            <span>Итого</span>
+            <span id="cartTotal">0 ₽</span>
+        </div>
+        <button class="btn-order" id="orderBtn" onclick="openOrderForm()">Оформить заказ</button>
+    </div>
+
+    <div class="order-modal" id="orderModal">
+        <div class="order-form">
+            <h3>📦 Оформление заказа</h3>
+            
+            <label for="orderAddressInput">📍 Адрес доставки</label>
+            <input type="text" id="orderAddressInput" placeholder="Начните вводить адрес...">
+            <div id="addressSuggestions"></div>
+            
+            <label for="orderPhoneInput">📞 Телефон</label>
+            <input type="tel" id="orderPhoneInput" placeholder="+7 (___) ___-__-__">
+            <div style="font-size:12px;color:#868e96;margin-top:-8px;margin-bottom:8px;">Введите номер в формате +7 (999) 999-99-99</div>
+            <div id="phoneError" style="color:#dc3545;font-size:12px;display:none;">❌ Введите корректный номер телефона</div>
+            
+            <div class="form-buttons">
+                <button class="btn-cancel" onclick="closeOrderForm()">Отмена</button>
+                <button class="btn-submit" id="submitOrderBtn" onclick="submitOrder()">Оформить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-overlay" id="historyOverlay" onclick="closeHistory(event)">
+        <div class="history-modal" id="historyModal">
+            <div class="history-header">
+                <h3>📜 История заказов</h3>
+                <button class="close-btn" onclick="closeHistory()">✕</button>
+            </div>
+            <div id="historyList">
+                <div class="empty-state">
+                    <span class="icon">📭</span>
+                    <p>История заказов пуста</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker зарегистрирован');
+                })
+                .catch(function(error) {
+                    console.log('Ошибка регистрации Service Worker:', error);
+                });
+        }
+    </script>
+
+</body>
+</html>
